@@ -20,6 +20,8 @@ def main():
     
     
 
+    print("starting game loop")
+    
     while True:
         log_state()
         for event in pygame.event.get():
