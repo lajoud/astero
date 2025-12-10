@@ -1,6 +1,7 @@
 from circleshape import CircleShape
 from constants import PLAYER_RADIUS,LINE_WIDTH,PLAYER_TURN_SPEED, PLAYER_SPEED,SHOT_RADIUS,PLAYER_SHOOT_SPEED,PLAYER_SHOOT_COOLDOWN_SECONDS
 from shot import Shot
+from logger import log_event, log_state
 import pygame
 
 class Player(CircleShape):
@@ -8,6 +9,9 @@ class Player(CircleShape):
         super().__init__(x,y,PLAYER_RADIUS)
         self.rotation=0
         self.shot_timer = 0
+        self.shield_power_up=False
+        self.attribute=""
+        self.attribute_timer=0
      
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -19,7 +23,10 @@ class Player(CircleShape):
     
     def draw(self,screen):
         points_list=self.triangle()
-        pygame.draw.polygon(screen,"white",points_list,LINE_WIDTH)
+        if self.shield_power_up==True:
+            pygame.draw.polygon(screen,"blue",points_list,LINE_WIDTH)
+        else:
+            pygame.draw.polygon(screen,"white",points_list,LINE_WIDTH)
     
     def rotate(self,dt):
         self.rotation += PLAYER_TURN_SPEED*dt
@@ -33,11 +40,16 @@ class Player(CircleShape):
     def shoot(self):
         new_shot = Shot(self.position[0], self.position[1])
         new_shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+    
+    
 
     def update(self, dt):
-        
-
         keys = pygame.key.get_pressed()
+        if self.attribute_timer<=0:
+            if self.attribute=="machine_gun":
+                log_event("Machine Gun Off")
+                self.attribute=""
+        self.attribute_timer-=dt
         if keys[pygame.K_q]:
             self.rotate(-dt)
         if keys[pygame.K_d]:
@@ -46,9 +58,19 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+            print("**",self.attribute,"**",self.attribute_timer,self.shot_timer)
         if keys[pygame.K_SPACE]:
-            if self.shot_timer>0:
-                self.shot_timer-=dt
+            #print(self.attribute,self.attribute_timer,self.shot_timer)
+            if self.attribute=="machine_gun":
+                if self.shot_timer>0:
+                    self.shot_timer-=dt                    
+                else:
+                    self.shot_timer= PLAYER_SHOOT_COOLDOWN_SECONDS*0.3
+                    self.shoot()                
             else:
-                self.shot_timer=PLAYER_SHOOT_COOLDOWN_SECONDS
-                self.shoot()
+                if self.shot_timer>0:
+                    self.shot_timer-=dt    
+                else:
+                    self.shot_timer=PLAYER_SHOOT_COOLDOWN_SECONDS
+                    self.shoot()
+

@@ -7,9 +7,23 @@ import random
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):
         super().__init__( x, y, radius)
+        self.attributes=""
+        rand_attributes =random.random()
+        rand_attributes_types=random.uniform(0,2)
+        
+        if 0<rand_attributes<0.1:
+            if 0<=rand_attributes_types<1:
+                self.color="yellow"
+                self.attributes="autoturret"
+            elif 1<=rand_attributes_types<=2:
+                self.color="purple"
+                self.attributes="machine_gun"
+        else:
+            self.color="white"
+
 
     def draw(self,screen):
-        pygame.draw.circle(screen, "white", self.position, self.radius,LINE_WIDTH)
+        pygame.draw.circle(screen, self.color, self.position, self.radius,LINE_WIDTH)
     
     def update(self,dt):
         self.position += self.velocity*dt
