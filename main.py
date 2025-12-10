@@ -49,6 +49,14 @@ def main():
 
         for element in drawable:
             element.draw(screen)
+        
+        for element in asteroids:
+            for bullet in shots:
+                if element.collides_with(bullet):
+                    log_event("asteroid_shot")
+                    bullet.kill()
+                    element.split()
+
 
         pygame.display.flip()
         
