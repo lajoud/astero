@@ -45,11 +45,17 @@ class Player(CircleShape):
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
+        #update on the timer for attributes
+        #allow to turn off attributes property
         if self.attribute_timer<=0:
             if self.attribute=="machine_gun":
                 log_event("Machine Gun Off")
                 self.attribute=""
+            if self.attribute=="autoturret":
+                log_event("Autoturret GunOff")
+                self.attribute=""                
         self.attribute_timer-=dt
+
         if keys[pygame.K_q]:
             self.rotate(-dt)
         if keys[pygame.K_d]:
@@ -58,15 +64,13 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
-            print("**",self.attribute,"**",self.attribute_timer,self.shot_timer)
         if keys[pygame.K_SPACE]:
-            #print(self.attribute,self.attribute_timer,self.shot_timer)
             if self.attribute=="machine_gun":
                 if self.shot_timer>0:
                     self.shot_timer-=dt                    
                 else:
                     self.shot_timer= PLAYER_SHOOT_COOLDOWN_SECONDS*0.3
-                    self.shoot()                
+                    self.shoot()
             else:
                 if self.shot_timer>0:
                     self.shot_timer-=dt    

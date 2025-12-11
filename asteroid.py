@@ -9,7 +9,7 @@ class Asteroid(CircleShape):
         super().__init__( x, y, radius)
         self.attributes=""
         rand_attributes =random.random()
-        rand_attributes_types=random.uniform(0,2)
+        rand_attributes_types=random.uniform(0,3)
         
         if 0<rand_attributes<0.1:
             if 0<=rand_attributes_types<1:
@@ -18,6 +18,9 @@ class Asteroid(CircleShape):
             elif 1<=rand_attributes_types<=2:
                 self.color="purple"
                 self.attributes="machine_gun"
+            elif 2<rand_attributes_types<=3:
+                self.color="red"
+                self.attributes="explosion"
         else:
             self.color="white"
 
