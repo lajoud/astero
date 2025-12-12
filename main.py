@@ -7,6 +7,7 @@ from shot import Shot
 from asteroidfield import AsteroidField
 from upgrade import Autoturret
 #from upgrade import Shield
+from score_sheet import score_sheet_edition
 import sys
 
 def main():
@@ -41,6 +42,33 @@ def main():
     life_bucket=0
     life_count=0
 
+    white=(255,255,255)
+    # create a font object.
+    # 1st parameter is the font file
+    # which is present in pygame.
+    # 2nd parameter is size of the font
+    font = pygame.font.Font('freesansbold.ttf', 28)
+
+    # create a text surface object,
+    # on which text is drawn on it.
+    text1 = font.render('Score: 0', True, white)
+    # create a rectangular object for the
+    # text surface object
+    textRect1 = text1.get_rect()
+    #set the center of the rectangular object.
+    textRect1.center = (SCREEN_WIDTH // 10, SCREEN_HEIGHT // 10)
+
+    # create a text surface object,
+    # on which text is drawn on it.
+    text2 = font.render('Life: 0', True, white)
+    # create a rectangular object for the
+    # text surface object
+    textRect2 = text2.get_rect()
+    #set the center of the rectangular object.
+    textRect2.center = (SCREEN_WIDTH // 10, SCREEN_HEIGHT // 5)
+
+
+
     print("starting game loop")
     
     while True:
@@ -67,6 +95,7 @@ def main():
                     life_count -= 1
                     log_event("One less Life")
                 else:
+                    score_sheet_edition(new_score)
                     log_event("player_hit")
                     print("Game over!")
                     sys.exit()
@@ -80,25 +109,33 @@ def main():
 
             
         
-
-
         for element in asteroids:
             for bullet in shots:
                 if element.collides_with(bullet):
+                    #update score and shield bucket
+                    new_score += 300*ASTEROID_MIN_RADIUS/element.radius
+                    shield_bucket+=300*ASTEROID_MIN_RADIUS/element.radius
+
                     log_event("asteroid_shot")
                     if element.attributes=="machine_gun":
                         new_player.attribute="machine_gun"
                         log_event("machine gun mode ON")
                         new_player.attribute_timer=4
+                        bullet.kill()
+                        element.split()
                     elif element.attributes=="autoturret":
                         new_player.attribute="autoturret"
                         log_event("autoturret mode ON")
                         new_player.attribute_timer=6
-                    bullet.kill()
-                    element.split()
-                    new_score += 300*ASTEROID_MIN_RADIUS/element.radius
+                        bullet.kill()
+                        element.split()
+                    elif element.attributes=="explosion":
+                        log_event("Explosion occurs")
+                        element.explode()
+                    else:
+                        bullet.kill()
+                        element.split()
 
-                    shield_bucket+=300*ASTEROID_MIN_RADIUS/element.radius
                     if shield_bucket>=  SHIELD_POWER_UP:
                        new_player.shield_power_up=True
                        shield_bucket=0 #reset of the bucket
@@ -111,7 +148,14 @@ def main():
                        log_event("One more life")
 
         pygame.display.flip()
-        
+        text1 = font.render(f"Score: {new_score}", True, white)
+        # text1=f"Score:{new_score}"
+        text2 = font.render(f"Life: {life_count}", True, white)
+        #text2=f"Life: {life_count}"
+        screen.blit(text1, textRect1)
+        screen.blit(text2, textRect2)
+        pygame.display.update()
+
         dt =my_clock.tick(60)/1000
         
 
