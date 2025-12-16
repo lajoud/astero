@@ -1,1 +1,11 @@
-Nicolas: 1700.0
+Top 10 players
+kiki: 48833
+Nico: 6000.0
+Nicolas: 5850.0
+kikitor: 4300.0
+Nico: 4250.0
+test: 2000.0
+test2: 1550.0
+testpasbeaucoup: 700.0
+test: 525
+test300: 300.0

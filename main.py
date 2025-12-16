@@ -95,9 +95,10 @@ def main():
                     life_count -= 1
                     log_event("One less Life")
                 else:
-                    score_sheet_edition(new_score)
+                    score_history=score_sheet_edition(new_score)
                     log_event("player_hit")
-                    print("Game over!")
+                    log_event("Game over!")
+                    print("Game Over")
                     sys.exit()
 
         for element in drawable:
