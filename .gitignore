@@ -1,2 +1,5 @@
 game_state.jsonl
 game_events.jsonl
+score.txt
+__pycache__/
+*.pyc

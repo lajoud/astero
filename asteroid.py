@@ -3,6 +3,7 @@ from constants import LINE_WIDTH, ASTEROID_MIN_RADIUS,EXPLOSION_PATTERNS,ASTEROI
 import pygame
 from logger import log_state, log_event
 import random
+from nuclear_shockwave import Nuclear_shockwave
 from shot import Shot
 
 class Asteroid(CircleShape):
@@ -10,9 +11,9 @@ class Asteroid(CircleShape):
         super().__init__( x, y, radius)
         self.attributes=""
         rand_attributes =random.random()
-        rand_attributes_types=random.uniform(0,3)
+        rand_attributes_types=random.uniform(0,4)
         
-        if 0<rand_attributes<0.05:
+        if 0<rand_attributes<0.2:
             if 0<=rand_attributes_types<1:
                 self.color="yellow"
                 self.attributes="autoturret"
@@ -22,6 +23,9 @@ class Asteroid(CircleShape):
             elif 2<rand_attributes_types<=3:
                 self.color="red"
                 self.attributes="explosion"
+            elif 3<rand_attributes_types<=4:
+                self.color="green"
+                self.attributes="nuke"                
         else:
             self.color="white"
 
@@ -52,8 +56,11 @@ class Asteroid(CircleShape):
         #print(self.radius/ASTEROID_MIN_RADIUS)
         angle_pattern=EXPLOSION_PATTERNS[int(self.radius/ASTEROID_MIN_RADIUS)-1] #recover information prior to .kill()
         self.kill()
-        print(angle_pattern,len(angle_pattern))
+        #print(angle_pattern,len(angle_pattern))
 
         for i in range(len(angle_pattern)):
             new_shot=Shot(self.position[0], self.position[1])
             new_shot.velocity = pygame.Vector2(0, 1).rotate(angle_pattern[i]) * ASTEROID_EXPLOSION_SPEED
+
+    def nuclear_explosion(self):
+        new_nuke=Nuclear_shockwave(self.position[0],self.position[1],self.radius)

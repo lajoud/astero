@@ -5,6 +5,7 @@ from player import Player
 from asteroid import Asteroid
 from shot import Shot
 from asteroidfield import AsteroidField
+from nuclear_shockwave import Nuclear_shockwave
 from upgrade import Autoturret
 #from upgrade import Shield
 from score_sheet import score_sheet_edition
@@ -20,12 +21,14 @@ def main():
     drawable =pygame.sprite.Group()
     asteroids= pygame.sprite.Group()
     shots= pygame.sprite.Group()
+    nuclear_shockwaves=pygame.sprite.Group()
     
 
     Player.containers = (updatable,drawable)
     Asteroid.containers = (asteroids,updatable,drawable)
     AsteroidField.containers = (updatable,)
     Shot.containers=(shots,updatable,drawable)
+    Nuclear_shockwave.containers=(nuclear_shockwaves,updatable,drawable)
     #Autoturret.Containers=(drawable)
     #Shield.containers=(updatable,drawable)
 
@@ -67,7 +70,7 @@ def main():
     #set the center of the rectangular object.
     textRect2.center = (SCREEN_WIDTH // 10, SCREEN_HEIGHT // 5)
 
-
+    running_time_scale=1
 
     print("starting game loop")
     
@@ -100,6 +103,24 @@ def main():
                     log_event("Game over!")
                     print("Game Over")
                     sys.exit()
+        
+        for element in nuclear_shockwaves:
+            if element.collides_with(new_player):
+                if new_player.shield_power_up==True:
+                    log_event("You've been hit by a nuclear shockwave, shield was blow off")
+                    new_player.shield_power_up=False
+                    log_event("Shield OFF")
+                if life_count>2:
+                    element.kill()
+                    life_count -= 3
+                    log_event("It takes 3 lifes to survive a nuclear shockwave. Three less Life")
+                else:
+                    score_history=score_sheet_edition(new_score)
+                    log_event("You did not survive the nuclear shockwave")
+                    log_event("Game over!")
+                    print("Game Over")
+                    sys.exit()
+
 
         for element in drawable:
             element.draw(screen)
@@ -111,6 +132,25 @@ def main():
             
         
         for element in asteroids:
+            for nuke in nuclear_shockwaves:
+                if element.collides_with(nuke):
+                    new_score += 300*ASTEROID_MIN_RADIUS/element.radius
+                    shield_bucket+=300*ASTEROID_MIN_RADIUS/element.radius                    
+                    element.kill()
+                    log_event("asteroid_destroyed_by_nuclear_explosion")
+                    
+                    if shield_bucket>=  SHIELD_POWER_UP:
+                       new_player.shield_power_up=True
+                       shield_bucket=0 #reset of the bucket
+                       log_event("Shield ON")
+                    
+                    life_bucket += 300*ASTEROID_MIN_RADIUS/element.radius
+                    if life_bucket>=  LIFE_UP:
+                       life_count += 1
+                       life_bucket=0 #reset of the life bucket
+                       log_event("One more life")
+
+
             for bullet in shots:
                 if element.collides_with(bullet):
                     #update score and shield bucket
@@ -133,6 +173,12 @@ def main():
                     elif element.attributes=="explosion":
                         log_event("Explosion occurs")
                         element.explode()
+                        bullet.kill()
+                    elif element.attributes=="nuke":
+                        log_event("Nuclear explostion detected\n Shockwave starting")
+                        element.nuclear_explosion()
+                        bullet.kill()
+
                     else:
                         bullet.kill()
                         element.split()
@@ -156,8 +202,9 @@ def main():
         screen.blit(text1, textRect1)
         screen.blit(text2, textRect2)
         pygame.display.update()
-
-        dt =my_clock.tick(60)/1000
+        
+        dt =my_clock.tick(60)/1000*running_time_scale
+        running_time_scale*=1.00005
         
 
 
