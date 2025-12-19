@@ -18,18 +18,18 @@ def score_sheet_edition(score):
                 print("What is your name ?")
                 player_name=input()
 
-            score_list.append([player_name,score])
-            score_list.sort(key = lambda x: float(x[1]), reverse=True)
-            with open("score.txt","w+") as f:
-                f.write("Top 10 players\n")
-                nb_score=min(len(score_list),10)
-                print("********")
-                print(score_list)
-                print("********")
-                for i in range(nb_score):
-                    f.write(f"{score_list[i][0]}: {score_list[i][1]}\n")
-                f.close()
-                return score_list
+                score_list.append([player_name,score])
+                score_list.sort(key = lambda x: float(x[1]), reverse=True)
+                with open("score.txt","w+") as f:
+                    f.write("Top 10 players\n")
+                    nb_score=min(len(score_list),10)
+                    print("********")
+                    print(score_list)
+                    print("********")
+                    for i in range(nb_score):
+                        f.write(f"{score_list[i][0]}: {score_list[i][1]}\n")
+            f.close()
+            return score_list
 
 
 
@@ -42,6 +42,6 @@ def score_sheet_edition(score):
             player_name=input()
             f.write(f"{player_name}: {score}")
             f.close()
-            return [[f"{player_name}:",score]]
+        return [[f"{player_name}:",score]]
 
 

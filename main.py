@@ -9,6 +9,7 @@ from nuclear_shockwave import Nuclear_shockwave
 from upgrade import Autoturret
 #from upgrade import Shield
 from score_sheet import score_sheet_edition
+from best_score_disp import display_best_score, game_over_screen
 import sys
 
 def main():
@@ -102,7 +103,12 @@ def main():
                     log_event("player_hit")
                     log_event("Game over!")
                     print("Game Over")
-                    sys.exit()
+                    
+                    game_over_screen(screen, score_history, my_clock)
+
+
+                    """display_best_score(screen,score_history,dt)
+                    sys.exit()"""
         
         for element in nuclear_shockwaves:
             if element.collides_with(new_player):
@@ -119,7 +125,12 @@ def main():
                     log_event("You did not survive the nuclear shockwave")
                     log_event("Game over!")
                     print("Game Over")
-                    sys.exit()
+
+                    game_over_screen(screen, score_history, my_clock)
+
+
+                    """display_best_score(screen,score_history,dt)
+                    sys.exit()"""
 
 
         for element in drawable:

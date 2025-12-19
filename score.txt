@@ -1,11 +1,11 @@
 Top 10 players
+Nicolas: 186250.0
 test: 98150.0
 Nicolas: 67850.0
 kiki: 48833
 ddzdad: 35050.0
+test: 28750.0
+fjfjfjf: 26750.0
+Nicolas: 24650.0
 nicolas: 23600.0
 fr: 21550.0
-[A[B[B[A[: 19150.0
-dzdz: 18300.0
-dzd: 11350.0
-ddd: 8950.0
